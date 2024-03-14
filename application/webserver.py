@@ -11,12 +11,52 @@ server = Flask(__name__)
 app = dash.Dash(__name__, server=server)
 
 MAX_DATA_POINTS = 1000
+UPDATE_FREQ_MS = 100
 
 time = deque(maxlen=MAX_DATA_POINTS)
 accel_x = deque(maxlen=MAX_DATA_POINTS)
 accel_y = deque(maxlen=MAX_DATA_POINTS)
 accel_z = deque(maxlen=MAX_DATA_POINTS)
 
+html_content = ''' 
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fall Guard </title >
+  <!-- linking to PyScript assets -->
+  <link rel="stylesheet" href="https://pyscript.net/releases/2022.12.1/pyscript.css" />
+    <script defer src="https://pyscript.net/releases/2022.12.1/pyscript.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js"></script>
+  <h1 class="title">Fall Guard</h1>
+</head>
+<body>
+
+<div id="navbar">
+
+<div class="dropdown" onclick="toggleDropdown()">
+  <button class="dropbtn">Menu 
+    <i class="fa fa-caret-down"></i>
+  </button>
+  <div class="dropdown-content">
+    <a href="index.html">Home</a>
+    <a href="data.html">Data</a>
+    <a href="falls.html">Falls</a>
+    <a href="about.html">About </a>
+  </div>
+</div>
+
+<a href="profile.html" class="profile">Profile</a>
+</div>
+
+<py-script>display("Hello World!")</py-script>
+</body>
+</html>
+
+'''
 app.layout = html.Div(
 	[
 		dcc.Markdown(
@@ -27,6 +67,7 @@ app.layout = html.Div(
 		),
 		dcc.Graph(id="live_graph"),
 		dcc.Interval(id="counter", interval=UPDATE_FREQ_MS),
+		html.Div(dcc.Markdown(html_content), dangerously_allow_html=True)
 	]
 )
 
